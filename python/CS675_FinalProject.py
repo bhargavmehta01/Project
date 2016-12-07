@@ -1,4 +1,19 @@
-import sys
+# Project Submitted by :-
+#
+# 1. Hrishikesh Sarma
+# 2. Bhargav Mehta
+#
+# Project File:
+# CS675_FinalProject.py
+#
+# Input Syntax:
+# python CS675_FinalProject.py <train_label_file> <train_data_file> <test_data_file>
+#
+#
+# Output:
+# 1. Execution Progress on Console.
+# 2. Predicted Labels in Prediction.txt fileimport sys
+
 sys.path.append("..")
 import operator
 import time
