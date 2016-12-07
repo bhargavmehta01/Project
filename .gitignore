@@ -6,3 +6,9 @@ python/traindata
 python/trainlabel
 
 python/prady2.py
+
+project_directory/testdata
+
+project_directory/traindata
+
+project_directory/trainlabel
