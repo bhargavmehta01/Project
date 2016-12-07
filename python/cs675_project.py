@@ -15,7 +15,9 @@ selected_cols = []
 num_features = 0
 
 
-# Module To Read Labels ##
+#############################
+####### Reading Labels ######
+#############################
 def read_labels(label_file):
     f = open(label_file)
     l = f.readline()
@@ -26,7 +28,9 @@ def read_labels(label_file):
     f.close()
 
 
-# Module To Read Data #
+##########################
+###### Reading Data ######
+##########################
 def read_data(data_file):
     global block_counter, selected_cols
     f = open(data_file)
@@ -48,7 +52,9 @@ def read_data(data_file):
     return data
 
 
-# Module To Calculate Pearson Correlation #
+############################################
+###### Calculating Pearson Correlation #####
+############################################
 def pearson_correlation(feature):
     feature_sum = sum(feature)
     feature_square = sum([n * n for n in feature])
@@ -64,7 +70,9 @@ def pearson_correlation(feature):
     return abs(numerator / denominator)
 
 
-# Module To Get Sum And Sum Of Squares Of Labels #
+####################################################
+##### Getting Sum And Sum Of Squares Of Labels #####
+####################################################
 def labels_info():
     global label_sum, label_square, label_calc
     size = len(labels_arr)
@@ -73,24 +81,30 @@ def labels_info():
     label_calc = (label_square - (label_sum * label_sum) / size)
 
 
-# Start of Main Method #
+#########################
+##### Main function #####
+#########################
 def main(args):
     global selected_cols, num_features
     start_time = time.time();
-    print("** Reading Train Data Labels **")
+    print("Reading Training Labels......")
     label_file = sys.argv[1]
     read_labels(label_file)
-    print("** Reading Of Train Data Labels Completed **")
+    print("Completed reading Training Labels")
     labels_info()
-    print("** Reading of Train Data Started **")
+    print("Reading Training Data.......")
+    for i in range(0,5,1):
+        print(".")
     data_file = sys.argv[2]
     data = read_data(data_file)
-    print("** Reading of Train Data Completed **")
+    print("Completed reading Training Data")
+    print("-------------------------------")
     rows = len(data)
     columns = len(data[0])
     column_counter = 0
 
-    print("** Performing Feature Reduction using Pearson Correlation **")
+    print("\n")
+    print("Feature Reduction using Pearson Correlation initialized")
 
     while column_counter < columns:
         feature = []
@@ -103,49 +117,49 @@ def main(args):
     len_sorted_correlation = len(sorted_correlation) - 1
 
     cols = []
-    num_features += 10
-    print("Number of Features Selected: " + str(num_features))
+    num_features += 15
+    print("Number of features selected : " + str(num_features))
+    print("Selected features : ")
     for i in range(len_sorted_correlation, len_sorted_correlation - num_features, -1):
         cols.append(sorted_correlation[i][0])
     selected_cols = sorted(cols, key=int)
     print(selected_cols)
     reduced_data = read_data(data_file)
 
-    print("** Feature Reduction Completed **")
+    print("Feature Reduction completed")
+    print("-------------------------------")
 
-    print("** Building Model **")
+    print("\n")
+    print("Constructing model........")
     model = svm_train(labels_arr, reduced_data)
     train_labels, train_acc, train_vals = svm_predict(labels_arr, reduced_data, model)
     acc, mse, scc = evaluations(labels_arr, train_labels)
-    print("** Model Built Successfully **")
+    print("Model constructed successfully")
 
-    print("** Validation results for train data **")
-    print("accuracy :: " + str(acc))
-    print("mse :: " + str(mse))
-    print("scc :: " + str(scc))
-    print("*********************")
+    print("Validation results for Training data : ")
+    print("Accuracy - " + str(acc))
+    print("mse - " + str(mse))
+    print("scc - " + str(scc))
+    print("-------------------------------")
 
-    print("** Reading of Test Data Started **")
+    print("\n")
+    print("Reading Test data.....")
     test_file = sys.argv[3]
     test_data = read_data(test_file)
 
-    print("** Reading of Test Data Completed **")
+    print("Done reading Test data")
 
     predict_labels, predict_acc, predict_val = svm_predict([0] * len(test_data), test_data, model)
 
-    print("** Predicted Output Labels Are On /Output/Prediction.txt **")
+    print("Predicted labels for test data are in Prediction.txt file")
 
     elapsed_time = time.time() - start_time
     print("Total Execution Time:: " + str(elapsed_time) + " seconds.")
 
-    sys.stdout = open("Output/Prediction.txt", "w")
+    sys.stdout = open("Prediction.txt", "w")
     for i in range(0, len(predict_labels), 1):
-        #print(int(predict_labels[i]))
-        print(str(int(predict_labels[i])))
+        print("{} {}".format(i,str(int(predict_labels[i]))))
 
-    print("***Prediction Complete For Test Data*")
-
-
-
+    print("Prediction Complete For Test Data*")
 
 if __name__ == "__main__": main(sys.argv)
